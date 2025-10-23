@@ -9,13 +9,13 @@ interface AudioContextType {
 const SaatiAudioContext = createContext<AudioContextType | undefined>(undefined);
 
 const soundEffects: Record<Sound, string> = {
-  'clock-in': 'https://raw.githack.com/Pixel-Perfect-Engineering-Displays/Saati-Assets/main/sounds/clock-in.mp3',
-  'clock-out': 'https://raw.githack.com/Pixel-Perfect-Engineering-Displays/Saati-Assets/main/sounds/clock-out.mp3',
-  'save': 'https://raw.githack.com/Pixel-Perfect-Engineering-Displays/Saati-Assets/main/sounds/save.mp3',
-  'delete': 'https://raw.githack.com/Pixel-Perfect-Engineering-Displays/Saati-Assets/main/sounds/delete.mp3',
-  'add': 'https://raw.githack.com/Pixel-Perfect-Engineering-Displays/Saati-Assets/main/sounds/add.mp3',
-  'notification': 'https://raw.githack.com/Pixel-Perfect-Engineering-Displays/Saati-Assets/main/sounds/notification.mp3',
-  'success': 'https://raw.githack.com/Pixel-Perfect-Engineering-Displays/Saati-Assets/main/sounds/success.mp3',
+  'clock-in': 'https://cdn.jsdelivr.net/gh/Pixel-Perfect-Engineering-Displays/Saati-Assets@main/sounds/clock-in.mp3',
+  'clock-out': 'https://cdn.jsdelivr.net/gh/Pixel-Perfect-Engineering-Displays/Saati-Assets@main/sounds/clock-out.mp3',
+  'save': 'https://cdn.jsdelivr.net/gh/Pixel-Perfect-Engineering-Displays/Saati-Assets@main/sounds/save.mp3',
+  'delete': 'https://cdn.jsdelivr.net/gh/Pixel-Perfect-Engineering-Displays/Saati-Assets@main/sounds/delete.mp3',
+  'add': 'https://cdn.jsdelivr.net/gh/Pixel-Perfect-Engineering-Displays/Saati-Assets@main/sounds/add.mp3',
+  'notification': 'https://cdn.jsdelivr.net/gh/Pixel-Perfect-Engineering-Displays/Saati-Assets@main/sounds/notification.mp3',
+  'success': 'https://cdn.jsdelivr.net/gh/Pixel-Perfect-Engineering-Displays/Saati-Assets@main/sounds/success.mp3',
 };
 
 interface AudioProviderProps {
