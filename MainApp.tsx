@@ -14,9 +14,6 @@ import Sidebar from './components/Sidebar';
 import TourGuide, { TourStep } from './components/TourGuide';
 import useLocalStorage from './hooks/useLocalStorage';
 import WorkHoursChart from './components/WorkHoursChart';
-import InstructionsModal from './components/InstructionsModal';
-import AboutModal from './components/AboutModal';
-import { AudioProvider } from './hooks/useAudio';
 
 
 interface MainAppProps {
@@ -36,8 +33,6 @@ const MainApp: React.FC<MainAppProps> = ({ user, onLogout, language, setLanguage
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isLogFormModalOpen, setIsLogFormModalOpen] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
-  const [isInstructionsModalOpen, setIsInstructionsModalOpen] = useState(false);
-  const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [logToEdit, setLogToEdit] = useState<LogEntry | null>(null);
 
   const [tourCompleted, setTourCompleted] = useLocalStorage('saati-tour-completed-v1', false);
@@ -80,47 +75,44 @@ const MainApp: React.FC<MainAppProps> = ({ user, onLogout, language, setLanguage
   };
 
   return (
-    <AudioProvider isEnabled={profile.enableSound}>
-        <div className="min-h-screen bg-transparent flex">
-        <Sidebar 
-            t={t} 
-            onHelpClick={() => handleSetRunTour(true)} 
-            onInstructionsClick={() => setIsInstructionsModalOpen(true)}
-            onAboutClick={() => setIsAboutModalOpen(true)}
-            isCollapsed={isSidebarCollapsed}
-            language={language}
-            onLinkClick={handleLinkClick}
-            isMobileMenuOpen={isMobileMenuOpen}
-            setIsMobileMenuOpen={setIsMobileMenuOpen}
+    <div className="min-h-screen bg-transparent flex">
+      <Sidebar 
+        t={t} 
+        onHelpClick={() => handleSetRunTour(true)} 
+        isCollapsed={isSidebarCollapsed}
+        toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        language={language}
+        onLinkClick={handleLinkClick}
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
+      
+      <div className={`smooth-scroll flex-1 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'sm:ms-20' : 'sm:ms-64'} ${isMobileMenuOpen ? 'overflow-hidden' : ''}`}>
+        <Header 
+          user={user}
+          onLogout={onLogout}
+          onProfileClick={() => setIsProfileModalOpen(true)}
+          language={language}
+          setLanguage={setLanguage}
+          theme={theme}
+          setTheme={setTheme}
+          t={t}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
         />
         
-        <div className={`smooth-scroll flex-1 transition-all duration-300 ease-in-out ${isSidebarCollapsed ? 'sm:ms-0' : 'sm:ms-64'} ${isMobileMenuOpen ? 'overflow-hidden' : ''}`}>
-            <Header 
-            user={user}
-            onLogout={onLogout}
-            onProfileClick={() => setIsProfileModalOpen(true)}
-            language={language}
-            setLanguage={setLanguage}
-            theme={theme}
-            setTheme={setTheme}
-            t={t}
-            toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            isSidebarCollapsed={isSidebarCollapsed}
-            setIsMobileMenuOpen={setIsMobileMenuOpen}
-            />
-            
-            <main className="pb-8">
-            {loadingData ? (
-                <div className="flex justify-center items-center py-20">
-                <LoadingSpinner />
-                </div>
-            ) : (
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-                <div id="dashboard" className="mt-8">
-                    <div id="dashboard-widget"><TimeTracker addLog={addLog} profile={profile} t={t} showToast={showToast} language={language} logs={logs} /></div>
-                </div>
-                <div id="log-history">
-                    <div id="logs-widget">
+        <main className="pb-8">
+          {loadingData ? (
+            <div className="flex justify-center items-center py-20">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+              <div id="dashboard" className="mt-8">
+                <div id="dashboard-widget"><TimeTracker addLog={addLog} profile={profile} t={t} showToast={showToast} /></div>
+              </div>
+              <div id="logs-and-tasks" className="mt-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2" id="logs-widget">
                     <LogManager 
                         logs={logs}
                         profile={profile}
@@ -132,76 +124,62 @@ const MainApp: React.FC<MainAppProps> = ({ user, onLogout, language, setLanguage
                         language={language}
                         showToast={showToast}
                     />
-                    </div>
-                </div>
-                <div id="reminders">
-                    <div id="reminders-widget">
+                  </div>
+                  <div className="lg:col-span-1" id="reminders-widget">
                     <Reminders
-                        tasks={tasks}
-                        saveTask={saveTask}
-                        deleteTask={deleteTask}
-                        t={t}
-                        showToast={showToast}
+                      tasks={tasks}
+                      saveTask={saveTask}
+                      deleteTask={deleteTask}
+                      t={t}
+                      showToast={showToast}
                     />
-                    </div>
+                  </div>
                 </div>
-                <div id="analytics">
-                    <div id="analytics-widget">
-                        <WorkHoursChart logs={logs} profile={profile} t={t} language={language} />
-                    </div>
+              </div>
+               <div id="analytics" className="mt-8">
+                <div id="analytics-widget">
+                    <WorkHoursChart logs={logs} profile={profile} t={t} language={language} />
                 </div>
-                </div>
-            )}
-            </main>
-        </div>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
 
-        <TourGuide run={runTour} setRun={handleSetRunTour} steps={tourSteps} t={t} />
+      <TourGuide run={runTour} setRun={handleSetRunTour} steps={tourSteps} t={t} />
 
-        <ProfileModal 
-            isOpen={isProfileModalOpen}
-            onClose={() => setIsProfileModalOpen(false)}
-            settings={profile}
-            onSave={saveProfile}
-            t={t}
-            showToast={showToast}
-        />
+      <ProfileModal 
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        settings={profile}
+        onSave={saveProfile}
+        t={t}
+        showToast={showToast}
+      />
 
-        <InstructionsModal
-            isOpen={isInstructionsModalOpen}
-            onClose={() => setIsInstructionsModalOpen(false)}
-            t={t}
-        />
+      <LogFormModal
+        isOpen={isLogFormModalOpen}
+        onClose={() => {
+          setIsLogFormModalOpen(false);
+          setLogToEdit(null); // Clear logToEdit on close
+        }}
+        onSave={saveLog}
+        logToEdit={logToEdit}
+        t={t}
+        showToast={showToast}
+      />
 
-        <AboutModal
-            isOpen={isAboutModalOpen}
-            onClose={() => setIsAboutModalOpen(false)}
-            t={t}
-        />
+      <ReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        logs={logs}
+        profile={profile}
+        t={t}
+        language={language}
+        user={user}
+      />
 
-        <LogFormModal
-            isOpen={isLogFormModalOpen}
-            onClose={() => {
-            setIsLogFormModalOpen(false);
-            setLogToEdit(null); // Clear logToEdit on close
-            }}
-            onSave={saveLog}
-            logToEdit={logToEdit}
-            t={t}
-            showToast={showToast}
-        />
-
-        <ReportModal
-            isOpen={isReportModalOpen}
-            onClose={() => setIsReportModalOpen(false)}
-            logs={logs}
-            profile={profile}
-            t={t}
-            language={language}
-            user={user}
-        />
-
-        </div>
-    </AudioProvider>
+    </div>
   );
 };
 

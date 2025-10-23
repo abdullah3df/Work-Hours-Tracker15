@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,15 +13,13 @@
     <style>
       :root {
         --bg-color-light: #f0f4f8;
-        --bg-color-dark: #0d1117;
-        --glass-bg-light: rgba(255, 255, 255, 0.7);
-        --glass-bg-dark: rgba(22, 27, 34, 0.7);
-        --glass-border-light: rgba(226, 232, 240, 0.8);
-        --glass-border-dark: rgba(45, 55, 65, 0.8);
-        --shadow-color-light: rgba(99, 102, 241, 0.1);
-        --shadow-color-dark: rgba(0, 0, 0, 0.4);
-        --text-glow-light: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
-        --text-glow-dark: drop-shadow(0 0 5px rgba(236, 236, 236, 0.3));
+        --bg-color-dark: #0f172a;
+        --glass-bg-light: rgba(255, 255, 255, 0.5);
+        --glass-bg-dark: rgba(30, 41, 59, 0.5);
+        --glass-border-light: rgba(255, 255, 255, 0.8);
+        --glass-border-dark: rgba(51, 65, 85, 0.8);
+        --shadow-color-light: rgba(99, 102, 241, 0.15);
+        --shadow-color-dark: rgba(0, 0, 0, 0.3);
       }
 
       body { 
@@ -42,11 +40,10 @@
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
         z-index: -1;
-        background: linear-gradient(45deg, #4f46e5, #7c3aed, #db2777, #2563eb, #10b981);
+        background: linear-gradient(45deg, #818cf8, #a78bfa, #f472b6, #60a5fa, #34d399);
         background-size: 400% 400%;
         animation: gradient-animation 25s ease infinite;
         opacity: 0.15;
-        filter: blur(50px);
       }
       html.dark body::before {
         opacity: 0.2;
@@ -59,7 +56,7 @@
         font-family: 'Inter', sans-serif;
       }
       * {
-        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
       }
 
       @keyframes gradient-animation {
@@ -126,53 +123,13 @@
         max-width: 300px;
         z-index: 10000;
         transition: all 0.4s ease-in-out;
+        backdrop-filter: blur(16px);
         border: 1px solid var(--glass-border-light);
-        backdrop-filter: blur(10px);
       }
       html.dark .tour-tooltip {
         background-color: var(--glass-bg-dark);
         color: #f3f4f6; /* gray-100 */
         border-color: var(--glass-border-dark);
-      }
-      .bg-glass-bg-light { background-color: var(--glass-bg-light); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-      .dark .bg-glass-bg-dark { background-color: var(--glass-bg-dark); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-      .border-glass-border-light { border-color: var(--glass-border-light); }
-      .dark .border-glass-border-dark { border-color: var(--glass-border-dark); }
-      .shadow-shadow-color-light { box-shadow: 0 25px 50px -12px var(--shadow-color-light); }
-      .dark .shadow-shadow-color-dark { box-shadow: 0 25px 50px -12px var(--shadow-color-dark); }
-      .text-glow { filter: var(--text-glow-light); }
-      .dark .text-glow { filter: var(--text-glow-dark); }
-      
-      .gooey-container {
-        filter: url('#gooey');
-      }
-      .gooey-button {
-        position: relative;
-        z-index: 1;
-      }
-      .gooey-button:hover {
-        transform: scale(1.1);
-      }
-      .gooey-button:active {
-        transform: scale(0.9);
-      }
-
-      .table-row-enter {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      .table-row-enter-active {
-        opacity: 1;
-        transform: translateY(0);
-        transition: opacity 300ms, transform 300ms;
-      }
-      .table-row-exit {
-        opacity: 1;
-      }
-      .table-row-exit-active {
-        opacity: 0;
-        transform: scale(0.9);
-        transition: opacity 300ms, transform 300ms;
       }
     </style>
     <script>
@@ -195,43 +152,29 @@
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
     "uuid": "https://aistudiocdn.com/uuid@^13.0.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^0.18.0",
-    "firebase/": "https://aistudiocdn.com/firebase@^12.4.0/"
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^0.18.0"
   }
 }
 </script>
+<link rel="stylesheet" href="/index.css">
 </head>
 <body>
-    <svg style="position: absolute; width: 0; height: 0;" xmlns="http://www.w3.org/2000/svg" version="1.1">
-        <defs>
-            <filter id="gooey">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-                <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" result="goo" />
-                <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
-            </filter>
-        </defs>
-    </svg>
     <div id="root"></div>
     <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script type="module">
       import { firebaseConfig } from './firebaseConfig.js';
       
-      // Check if the config has been filled out and expose it globally for the React app
-      window.isFirebaseConfigured = firebaseConfig.projectId && !firebaseConfig.projectId.startsWith('YOUR_');
-
       // Initialize Firebase
       try {
-        // Check if the API key is present, config is valid, and Firebase is not already initialized.
+        // Check if the API key is present and Firebase is not already initialized.
         // The API key is injected from environment variables.
-        if (window.isFirebaseConfigured && firebaseConfig.apiKey && firebase.apps.length === 0) {
+        if (firebaseConfig.apiKey && firebase.apps.length === 0) {
           firebase.initializeApp(firebaseConfig);
         } else if (!firebaseConfig.apiKey) {
           console.warn("Firebase API Key is missing. Please ensure it is set in your environment variables. The app will continue, but authentication will fail.");
-        } else if (!window.isFirebaseConfigured) {
-          console.warn("Firebase is not configured. Please update firebaseConfig.js. The app will run in a limited guest mode.");
         }
       } catch (e) {
         console.error("Firebase initialization error. Please check your Firebase configuration and ensure the API key is valid.", e);
